@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openstack-network
-# Recipe:: dhcp_agent
+# Recipe:: l3_agent
 #
 # Copyright 2013, AT&T
 #
@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+# Some plugins have L3 functionality, so we install the plugin
+# Python package and include the plugin-specific recipe here...
+main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
+
 # This will copy recursively all the files in
 # /files/default/etc/quantum/rootwrap.d
 remote_directory "/etc/quantum/rootwrap.d" do
@@ -31,22 +35,20 @@ directory "/etc/quantum/plugins" do
   mode 00700
 end
 
-platform_options["quantum_dhcp_packages"].each do |pkg|
+platform_options["quantum_l3_packages"].each do |pkg|
   package pkg do
     action :install
+    # The providers below do not use the generic L3 agent...
+    not_if { ["nicira", "plumgrid", "bigswitch"].include?(main_plugin)
   end
 end
 
-service "quantum-dhcp-agent" do
-  service_name platform_options["quantum_dhcp_agent_service"]
+service "quantum-l3-agent" do
+  service_name platform_options["quantum_l3_agent_service"]
   supports :status => true, :restart => true
 
   action :enable
 end
-
-# Some plugins have DHCP functionality, so we install the plugin
-# Python package and include the plugin-specific recipe here...
-main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
 
 package platform_options["quantum_plugin_package"].gsub("%plugin%", main_plugin) do
   action :install
@@ -54,15 +56,18 @@ end
 
 include_recipe "openstack-network::#{main_plugin}"
 
-execute "quantum-dhcp-setup --plugin #{main_plugin}" do
-  only_if { platform?(%w(fedora redhat centos)) } # :pragma-foodcritic: ~FC024 - won't fix this
+execute "quantum-l3-setup --plugin #{main_plugin}" do
+  only_if {
+    platform?(%w(fedora redhat centos)) and not # :pragma-foodcritic: ~FC024 - won't fix this
+    ["nicira", "plumgrid", "bigswitch"].include?(main_plugin)
+  }
 end
 
-template "/etc/quantum/dhcp_agent.ini" do
-  source "dhcp_agent.ini.erb"
+template "/etc/quantum/l3_agent.ini" do
+  source "l3_agent.ini.erb"
   owner node["openstack-network"]["user"]
   group node["openstack-network"]["group"]
   mode   00644
 
-  notifies :restart, "service[quantum-dhcp-agent]", :immediately
+  notifies :restart, "service[quantum-l3-agent]", :immediately
 end
