@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-execute "sudo quantum-node-setup --plugin openvswitch" do
+execute "quantum-node-setup --plugin openvswitch" do
   only_if { platform?(%w(fedora redhat centos)) } # :pragma-foodcritic: ~FC024 - won't fix this
 end
 
