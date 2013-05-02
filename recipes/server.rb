@@ -23,6 +23,8 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
+main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
+
 if node["openstack-network"]["syslog"]["use"]
   include_recipe "openstack-common::logging"
 end
@@ -49,6 +51,22 @@ end
 
 service "quantum-server" do
   service_name platform_options["quantum_server_service"]
+  supports :status => true, :restart => true
+
+  action :enable
+end
+
+service "quantum-l3-agent" do
+  service_name platform_options["quantum_l3_agent_service"]
+  supports :status => true, :restart => true
+
+  # The providers below do not use the generic L3 agent...
+  not_if { ["nicira", "plumgrid", "bigswitch"].include?(main_plugin)
+  action :enable
+end
+
+service "quantum-metadata-agent" do
+  service_name platform_options["quantum_metadata_agent_service"]
   supports :status => true, :restart => true
 
   action :enable
@@ -108,7 +126,6 @@ end
 
 # Here is where we set up the appropriate plugin INI files
 # for the L2 and L3 drivers...
-main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
 
 # Install the plugin's Python package
 package platform_options["quantum_plugin_package"].gsub("%plugin%", main_plugin) do

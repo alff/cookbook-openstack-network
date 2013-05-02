@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+execute "quantum-node-setup --plugin openvswitch" do
+  only_if { platform?(%w(fedora redhat centos)) } # :pragma-foodcritic: ~FC024 - won't fix this
+end
 
 template "/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini" do
   source "plugins/openvswitch/ovs_quantum_plugin.ini.erb"

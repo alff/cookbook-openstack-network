@@ -54,7 +54,7 @@ default["openstack-network"]["syslog"]["use"] = false
 default["openstack-network"]["syslog"]["facility"] = "LOG_LOCAL2"
 default["openstack-network"]["syslog"]["config_facility"] = "local2"
 
-# The Linux bridging interface driver.
+# The bridging interface driver.
 #
 # Options are:
 #
@@ -63,13 +63,73 @@ default["openstack-network"]["syslog"]["config_facility"] = "local2"
 #
 default["openstack-network"]["interface_driver"] = 'quantum.agent.linux.interface.OVSInterfaceDriver'
 
+# The agent can use other DHCP drivers.  Dnsmasq is the simplest and requires
+# no additional setup of the DHCP server.
+default["openstack-network"]["dhcp_driver"] = 'quantum.agent.linux.dhcp.Dnsmasq'
+
+# Allow overlapping IP (Must have kernel build with CONFIG_NET_NS=y and
+# iproute2 package that supports namespaces).
+default["openstack-network"]["use_namespaces"] = "True"
+
 # ============================= DHCP Agent Configuration ===================
 
 # Number of seconds between sync of DHCP agent with Quantum API server
 default["openstack-network"]["dhcp"]["resync_interval"] = 5
 
-# Driver to use for DHCP control
-default["openstack-network"]["dhcp"]["driver"] = 'quantum.agent.linux.dhcp.Dnsmasq'
+# OVS based plugins(Ryu, NEC, NVP, BigSwitch/Floodlight) that use OVS
+# as OpenFlow switch and check port status
+default["openstack-network"]["dhcp"]["ovs_use_veth"] = "True"
+
+# The DHCP server can assist with providing metadata support on isolated
+# networks. Setting this value to True will cause the DHCP server to append
+# specific host routes to the DHCP request.  The metadata service will only
+# be activated when the subnet gateway_ip is None.  The guest instance must
+# be configured to request host routes via DHCP (Option 121).
+default["openstack-network"]["dhcp"]["enable_isolated_metadata"] = "False"
+
+# Allows for serving metadata requests coming from a dedicated metadata
+# access network whose cidr is 169.254.169.254/16 (or larger prefix), and
+# is connected to a Quantum router from which the VMs send metadata
+# request. In this case DHCP Option 121 will not be injected in VMs, as
+# they will be able to reach 169.254.169.254 through a router.
+# This option requires enable_isolated_metadata = True
+default["openstack-network"]["dhcp"]["enable_metadata_network"] = "False"
+
+# ============================= L3 Agent Configuration =====================
+
+# If use_namespaces is set as False then the agent can only configure one router.
+# This is done by setting the specific router_id.
+default["openstack-network"]["l3"]["router_id"] = ""
+
+# Each L3 agent can be associated with at most one external network.  This
+# value should be set to the UUID of that external network.  If empty,
+# the agent will enforce that only a single external networks exists and
+# use that external network id
+default["openstack-network"]["l3"]["gateway_external_network_id"] = ""
+
+# Indicates that this L3 agent should also handle routers that do not have
+# an external network gateway configured.  This option should be True only
+# for a single agent in a Quantum deployment, and may be False for all agents
+# if all routers must have an external network gateway
+default["openstack-network"]["l3"]["handle_internal_only_routers"] = "True"
+
+# Name of bridge used for external network traffic. This should be set to
+# empty value for the linux bridge
+default["openstack-network"]["l3"]["external_network_bridge"] = "br-ex"
+
+# TCP Port used by Quantum metadata server
+default["openstack-network"]["l3"]["metadata_port"] = 9697
+
+# Send this many gratuitous ARPs for HA setup. Set it below or equal to 0
+# to disable this feature.
+default["openstack-network"]["l3"]["send_arp_for_ha"] = 3
+
+# seconds between re-sync routers' data if needed
+default["openstack-network"]["l3"]["periodic_interval"] = 40
+
+# seconds to start to sync routers' data after
+# starting agent
+default["openstack-network"]["l3"]["periodic_fuzzy_delay"] = 5
 
 # ============================= Metadata Agent Configuration ===============
 
@@ -517,9 +577,11 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
     "nova_network_packages" => [ "openstack-nova-network" ],
     "quantum_packages" => [ "openstack-quantum" ],
     "quantum_dhcp_packages" => [ "openstack-quantum" ],
+    "quantum_l3_packages" => [ "openstack-quantum" ],
     "quantum_plugin_package" => [ "openstack-quantum-%plugin%" ],
     "quantum_server_service" => "quantum-server",
     "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
+    "quantum_dhcp_agent_service" => "quantum-l3-agent",
     "package_overrides" => ""
   }
 when "ubuntu"
@@ -528,9 +590,11 @@ when "ubuntu"
     "nova_network_packages" => [ "nova-network" ],
     "quantum_packages" => [ "quantum-server", "python-quantumclient", "python-pyparsing", "python-cliff" ],
     "quantum_dhcp_packages" => [ "quantum-dhcp-agent" ],
+    "quantum_l3_packages" => [ "quantum-l3-agent" ],
     "quantum_plugin_package" => [ "quantum-plugin-%plugin%" ],
     "quantum_server_service" => "quantum-server",
     "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
+    "quantum_l3_agent_service" => "quantum-l3-agent",
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

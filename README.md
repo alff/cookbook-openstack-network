@@ -32,20 +32,25 @@ The following cookbooks are dependencies:
 * database
 * keystone
 * mysql
-* openstack-common
+* openstack-common `>= 2.0.0`
 
 Recipes
 =======
 
-api
+server
 ------
 
 - Installs the openstack-network API server
 
-ovs
----
+dhcp\_agent
+--------
 
-- Installs the OVS L2 plugin
+- Installs the DHCP agent
+
+l3\_agent
+--------
+
+- Installs the L3 agent and metadata agent
 
 keystone-registration
 ---------------------
@@ -65,11 +70,8 @@ TODO
 Templates
 =========
 
-* `glance-api-paste.ini.erb` - Paste config for glance-api middleware
-* `glance-api.conf.erb` - Config file for glance-api server
-* `glance-registry-paste.ini.erb` - Paste config for glance-registry middleware
-* `glance-registry.conf.erb` - Config file for glance-registry server
-* `glance-scrubber.conf.erb` - Config file for glance image scrubber service
+* `api-paste.ini.erb` - Paste config for OpenStack Network server
+* `quantum.conf.erb` - Config file for OpenStack Network server
 * `policy.json.erb` - Configuration of ACLs for glance API server
 
 License and Author
