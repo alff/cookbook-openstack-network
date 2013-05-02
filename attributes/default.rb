@@ -504,7 +504,7 @@ default["openstack-network"]["ryu"]["ovsdb_ip"] = ""
 default["openstack-network"]["ryu"]["ovsdb_interface"] = "eth0"
 
 # Firewall driver for realizing quantum security group function
-default["openstack-network"]["ryu"]["firewall_driver"] = quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver"
+default["openstack-network"]["ryu"]["firewall_driver"] = "quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver"
 
 # Agent's polling interval in seconds
 default["openstack-network"]["ryu"]["polling_interval"] = 2
@@ -516,8 +516,10 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
     "mysql_python_packages" => [ "MySQL-python" ],
     "nova_network_packages" => [ "openstack-nova-network" ],
     "quantum_packages" => [ "openstack-quantum" ],
+    "quantum_dhcp_packages" => [ "openstack-quantum" ],
     "quantum_plugin_package" => [ "openstack-quantum-%plugin%" ],
     "quantum_server_service" => "quantum-server",
+    "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
     "package_overrides" => ""
   }
 when "ubuntu"
@@ -525,8 +527,10 @@ when "ubuntu"
     "mysql_python_packages" => [ "python-mysqldb" ],
     "nova_network_packages" => [ "nova-network" ],
     "quantum_packages" => [ "quantum-server", "python-quantumclient", "python-pyparsing", "python-cliff" ],
+    "quantum_dhcp_packages" => [ "quantum-dhcp-agent" ],
     "quantum_plugin_package" => [ "quantum-plugin-%plugin%" ],
     "quantum_server_service" => "quantum-server",
+    "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

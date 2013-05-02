@@ -21,7 +21,7 @@ template "/etc/quantum/plugins/bigswitch/restproxy.ini" do
   source "plugins/bigswitch/restproxy.ini.erb"
   owner node["openstack-network"]["user"]
   group node["openstack-network"]["group"]
-  mode   00644
+  mode 00644
   variables(
     :sql_connection => sql_connection
   )

@@ -80,7 +80,7 @@ template "/etc/quantum/policy.json" do
   source "policy.json.erb"
   owner node["openstack-network"]["user"]
   group node["openstack-network"]["group"]
-  mode   00644
+  mode 00644
 
   notifies :restart, "service[quantum-server]", :immediately
 end
@@ -150,4 +150,4 @@ template "/etc/quantum/api-paste.ini" do
 end
 
 # Sync db after config file is generated
-execute "quantum-manage db_sync"
+execute "quantum-db-manage stamp head && quantum-db-manage upgrade head"
