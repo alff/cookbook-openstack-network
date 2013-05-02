@@ -17,12 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe "sysctl::default"
-
-sysctl 'net.ipv4.ip_forward' do
-    value '1'
-end
-
 # Some plugins have L3 functionality, so we install the plugin
 # Python package and include the plugin-specific recipe here...
 main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
