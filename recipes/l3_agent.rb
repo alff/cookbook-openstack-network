@@ -71,3 +71,14 @@ template "/etc/quantum/l3_agent.ini" do
 
   notifies :restart, "service[quantum-l3-agent]", :immediately
 end
+
+if not ["nicira", "plumgrid", "bigswitch"].include?(main_plugin) do
+  # See http://docs.openstack.org/trunk/openstack-network/admin/content/install_quantum-l3.html
+  ext_bridge = node["openstack-network"]["l3"]["external_network_bridge"]
+  ext_bridge_iface = node["openstack-network"]["l3"]["external_network_bridge_interface"]
+  execute "create external network bridge" do
+    command "ovs-vsctl add-br #{ext_bridge} && ovs-vsctl add-port #{ext_bridge} #{ext_bridge_iface}"
+    action :run
+    not_if "ovs-vsctl show | grep 'Bridge #{ext_bridge}'"
+  end
+end
