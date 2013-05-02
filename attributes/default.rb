@@ -117,6 +117,9 @@ default["openstack-network"]["l3"]["handle_internal_only_routers"] = "True"
 # empty value for the linux bridge
 default["openstack-network"]["l3"]["external_network_bridge"] = "br-ex"
 
+# Interface to use for external bridge.
+default["openstack-network"]["l3"]["external_network_bridge_interface"] = "eth1"
+
 # TCP Port used by Quantum metadata server
 default["openstack-network"]["l3"]["metadata_port"] = 9697
 
