@@ -21,7 +21,7 @@ template "/etc/quantum/plugins/midonet/midonet.ini" do
   source "plugins/midonet/midonet.ini.erb"
   owner node["openstack-network"]["user"]
   group node["openstack-network"]["group"]
-  mode   00644
+  mode 00644
   variables(
     :sql_connection => sql_connection
   )

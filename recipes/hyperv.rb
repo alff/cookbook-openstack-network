@@ -21,7 +21,7 @@ template "/etc/quantum/plugins/hyperv/hyperv_quantum_plugin.ini" do
   source "plugins/hyperv/hyperv_quantum__plugin.ini.erb"
   owner node["openstack-network"]["user"]
   group node["openstack-network"]["group"]
-  mode   00644
+  mode 00644
   variables(
     :sql_connection => sql_connection
   )
