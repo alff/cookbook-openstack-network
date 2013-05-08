@@ -16,7 +16,8 @@ L3 networking for various hardware vendors and standards.
 Requirements
 ============
 
-Chef 0.10.0 or higher required (for Chef environment use)
+* Chef 0.10.0 or higher required (for Chef environment use)
+* [Network Addr](https://gist.github.com/jtimberman/1040543) Ohai plugin.
 
 Platform
 --------
