@@ -153,8 +153,14 @@ default["openstack"]["network"]["metadata"]["nova_metadata_ip"] = "127.0.0.1"
 
 # ============================= LBaaS Agent Configuration ==================
 
+# Enable or disable quantum loadbalancer
+default["openstack-network"]["quantum_loadbalancer"] = true
+
 # Number of seconds between sync of LBaaS agent with Quantum API server
 default["openstack"]["network"]["lbaas"]["periodic_interval"] = 10
+
+# Set lbaas plugin
+default["openstack-network"]["quantum_plugin"] = "ovs"
 
 # ============================= OVS Plugin Configuration ===================
 
@@ -604,6 +610,7 @@ when "ubuntu"
     "mysql_python_packages" => [ "python-mysqldb" ],
     "nova_network_packages" => [ "nova-network" ],
     "quantum_packages" => [ "quantum-server", "python-quantumclient", "python-pyparsing", "python-cliff" ],
+    "quantum_lb_packages" => ["quantum-lbaas-agent", "haproxy"],
     "quantum_dhcp_packages" => [ "quantum-dhcp-agent" ],
     "quantum_l3_packages" => [ "quantum-l3-agent" ],
     "quantum_plugin_package" => "quantum-plugin-%plugin%",
