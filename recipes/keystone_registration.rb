@@ -31,9 +31,9 @@ auth_uri = ::URI.decode identity_admin_endpoint.to_s
 api_endpoint = endpoint "network-api"
 
 service_pass = service_password "quantum"
-service_tenant_name = node["openstack-network"]["service_tenant_name"]
-service_user = node["openstack-network"]["service_user"]
-service_role = node["openstack-network"]["service_role"]
+service_tenant_name = node["openstack"]["network"]["service_tenant_name"]
+service_user = node["openstack"]["network"]["service_user"]
+service_role = node["openstack"]["network"]["service_role"]
 
 keystone_register "Register Network API Service" do
   auth_uri auth_uri
@@ -49,7 +49,7 @@ keystone_register "Register Network Endpoint" do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
   service_type "network"
-  endpoint_region node["openstack-network"]["region"]
+  endpoint_region node["openstack"]["network"]["region"]
   endpoint_adminurl api_endpoint.to_s
   endpoint_internalurl api_endpoint.to_s
   endpoint_publicurl api_endpoint.to_s

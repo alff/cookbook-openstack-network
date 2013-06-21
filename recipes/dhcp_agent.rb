@@ -20,14 +20,14 @@
 # This will copy recursively all the files in
 # /files/default/etc/quantum/rootwrap.d
 remote_directory "/etc/quantum/rootwrap.d" do
-  files_owner node["openstack-network"]["user"]
-  files_group node["openstack-network"]["group"]
+  files_owner node["openstack"]["network"]["user"]
+  files_group node["openstack"]["network"]["group"]
   files_mode 00700
 end
 
 directory "/etc/quantum/plugins" do
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode 00700
 end
 
@@ -46,7 +46,7 @@ end
 
 # Some plugins have DHCP functionality, so we install the plugin
 # Python package and include the plugin-specific recipe here...
-main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
+main_plugin = node["openstack"]["network"]["interface_driver"].split('.').last.downcase
 
 package platform_options["quantum_plugin_package"].gsub("%plugin%", main_plugin) do
   action :install
@@ -60,8 +60,8 @@ end
 
 template "/etc/quantum/dhcp_agent.ini" do
   source "dhcp_agent.ini.erb"
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode   00644
 
   notifies :restart, "service[quantum-dhcp-agent]", :immediately

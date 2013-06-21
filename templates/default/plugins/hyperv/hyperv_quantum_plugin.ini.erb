@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DATABASE]
 # This line MUST be changed to actually run the plugin.
 # Example:
@@ -31,7 +31,7 @@ reconnect_interval = 2
 #
 # Default: tenant_network_type = local
 # Example: tenant_network_type = vlan
-tenant_network_type = <%= node["openstack-network"]["hyperv"]["tenant_network_type"] %>
+tenant_network_type = <%= node["openstack"]["network"]["hyperv"]["tenant_network_type"] %>
 
 # (ListOpt) Comma-separated list of
 # <physical_network>[:<vlan_min>:<vlan_max>] tuples enumerating ranges
@@ -43,11 +43,11 @@ tenant_network_type = <%= node["openstack-network"]["hyperv"]["tenant_network_ty
 #
 # Default: network_vlan_ranges =
 # Example: network_vlan_ranges = physnet1:1000:2999
-network_vlan_ranges = <%= node["openstack-network"]["hyperv"]["network_vlan_ranges"] %>
+network_vlan_ranges = <%= node["openstack"]["network"]["hyperv"]["network_vlan_ranges"] %>
 
 [AGENT]
 # Agent's polling interval in seconds
-polling_interval = <%= node["openstack-network"]["hyperv"]["polling_interval"] %>
+polling_interval = <%= node["openstack"]["network"]["hyperv"]["polling_interval"] %>
 
 # (ListOpt) Comma separated list of <physical_network>:<vswitch>
 # where the physical networks can be expressed with wildcards,
@@ -59,10 +59,10 @@ polling_interval = <%= node["openstack-network"]["hyperv"]["polling_interval"] %
 #
 # Default: physical_network_vswitch_mappings = *:external
 # Example: physical_network_vswitch_mappings = net1:external1,net2:external2
-physical_network_vswitch_mappings = <%= node["openstack-network"]["hyperv"]["physical_network_vswitch_mappings"] %>
+physical_network_vswitch_mappings = <%= node["openstack"]["network"]["hyperv"]["physical_network_vswitch_mappings"] %>
 
 # (StrOpt) Private virtual switch name used for local networking.
 #
 # Default: local_network_vswitch = private
 # Example: local_network_vswitch = custom_vswitch
-local_network_vswitch = <%= node["openstack-network"]["hyperv"]["local_network_vswitch"] %>
+local_network_vswitch = <%= node["openstack"]["network"]["hyperv"]["local_network_vswitch"] %>

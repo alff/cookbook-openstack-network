@@ -18,11 +18,11 @@
 #
 
 # discover database attributes
-db_user = node["openstack-network"]["db"]["username"]
+db_user = node["openstack"]["network"]["db"]["username"]
 db_pass = db_password "quantum"
 sql_connection = db_uri("network", db_user, db_pass)
 
-platform_options = node["openstack-network"]["platform"]
+platform_options = node["openstack"]["network"]["platform"]
 
 platform_options["quantum_openvswitch_packages"].each do |pkg|
   package pkg do
@@ -42,8 +42,8 @@ end
 
 template "/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini" do
   source "plugins/openvswitch/ovs_quantum_plugin.ini.erb"
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode 00644
   variables(
     :sql_connection => sql_connection

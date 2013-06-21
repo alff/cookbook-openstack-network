@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 
 [composite:quantum]
 use = egg:Paste#urlmap
@@ -27,8 +27,8 @@ paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 auth_host = <%= @identity_endpoint.host %>
 auth_port = <%= @identity_endpoint.port %>
 auth_protocol = <%= @identity_endpoint.scheme %>
-admin_tenant_name = <%= node["openstack-network"]["service_tenant_name"] %>
-admin_user = <%= node["openstack-network"]["service_user"] %>
+admin_tenant_name = <%= node["openstack"]["network"]["service_tenant_name"] %>
+admin_user = <%= node["openstack"]["network"]["service_user"] %>
 admin_password = <%= @service_pass %>
 delay_auth_decision = true
-signing_dir = <%= node["openstack-network"]["api"]["auth"]["cache_dir"] %>
+signing_dir = <%= node["openstack"]["network"]["api"]["auth"]["cache_dir"] %>

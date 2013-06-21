@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DATABASE]
 # This line MUST be changed to actually run the plugin.
 # Example:
@@ -32,7 +32,7 @@ reconnect_interval = 2
 #   sync_data   :   True | False                (default: False)
 #   server_timeout   :  10                       (default: 10 seconds)
 #
-servers = <%= node["openstack-network"]["bigswitch"]["servers"] %>
+servers = <%= node["openstack"]["network"]["bigswitch"]["servers"] %>
 #server_auth=username:password
 #server_ssl=True
 #sync_data=True

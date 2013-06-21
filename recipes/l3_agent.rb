@@ -19,19 +19,19 @@
 
 # Some plugins have L3 functionality, so we install the plugin
 # Python package and include the plugin-specific recipe here...
-main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
+main_plugin = node["openstack"]["network"]["interface_driver"].split('.').last.downcase
 
 # This will copy recursively all the files in
 # /files/default/etc/quantum/rootwrap.d
 remote_directory "/etc/quantum/rootwrap.d" do
-  files_owner node["openstack-network"]["user"]
-  files_group node["openstack-network"]["group"]
+  files_owner node["openstack"]["network"]["user"]
+  files_group node["openstack"]["network"]["group"]
   files_mode 00700
 end
 
 directory "/etc/quantum/plugins" do
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode 00700
 end
 
@@ -65,8 +65,8 @@ end
 
 template "/etc/quantum/l3_agent.ini" do
   source "l3_agent.ini.erb"
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode   00644
 
   notifies :restart, "service[quantum-l3-agent]", :immediately
@@ -74,8 +74,8 @@ end
 
 if not ["nicira", "plumgrid", "bigswitch"].include?(main_plugin) do
   # See http://docs.openstack.org/trunk/openstack-network/admin/content/install_quantum-l3.html
-  ext_bridge = node["openstack-network"]["l3"]["external_network_bridge"]
-  ext_bridge_iface = node["openstack-network"]["l3"]["external_network_bridge_interface"]
+  ext_bridge = node["openstack"]["network"]["l3"]["external_network_bridge"]
+  ext_bridge_iface = node["openstack"]["network"]["l3"]["external_network_bridge_interface"]
   execute "create external network bridge" do
     command "ovs-vsctl add-br #{ext_bridge} && ovs-vsctl add-port #{ext_bridge} #{ext_bridge_iface}"
     action :run

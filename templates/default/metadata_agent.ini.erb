@@ -1,9 +1,9 @@
 B
-bsbrbÂode["openstack-network"]["custom_template_banner"] %>
+bsbrbÂode["openstack"]["network"]["custom_template_banner"] %>
 
 [DEFAULT]
 # Show debugging output in log (sets DEBUG log level output)
-debug = <%= node["openstack-network"]["debug"] %>
+debug = <%= node["openstack"]["network"]["debug"] %>
 
 # The Quantum user information for accessing the Quantum API.
 auth_url = http://localhost:35357/v2.0
@@ -13,7 +13,7 @@ admin_user = %SERVICE_USER%
 admin_password = %SERVICE_PASSWORD%
 
 # IP address used by Nova metadata server
-nova_metadata_ip = <%= node["openstack-network"]["metadata"]["nova_metadata_ip"] %>
+nova_metadata_ip = <%= node["openstack"]["network"]["metadata"]["nova_metadata_ip"] %>
 
 # TCP Port used by Nova metadata server
 # nova_metadata_port = 8775

@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DATABASE]
 # This line MUST be changed to actually run the plugin.
 # Example:
@@ -28,11 +28,11 @@ reconnect_interval = 2
 # The integration bridge acts as a virtual "patch port". All VM VIFs are
 # attached to this bridge and then "patched" according to their network
 # connectivity.
-integration_bridge = <%= node["openstack-network"]["nec"]["integration_bridge"] %>
+integration_bridge = <%= node["openstack"]["network"]["nec"]["integration_bridge"] %>
 
 [AGENT]
 # Agent's polling interval in seconds
-polling_interval = <%= node["openstack-network"]["nec"]["polling_interval"] %>
+polling_interval = <%= node["openstack"]["network"]["nec"]["polling_interval"] %>
 
 # Use "sudo quantum-rootwrap /etc/quantum/rootwrap.conf" to use the real
 # root filter facility.
@@ -41,16 +41,16 @@ root_helper = sudo
 
 [SECURITYGROUP]
 # Firewall driver for realizing quantum security group function
-firewall_driver = <%= node["openstack-network"]["nec"]["firewall_driver"] %>
+firewall_driver = <%= node["openstack"]["network"]["nec"]["firewall_driver"] %>
 
 [OFC]
 # Specify OpenFlow Controller Host, Port and Driver to connect.
-host = <%= node["openstack-network"]["nec"]["ofc_host"] %>
-port = <%= node["openstack-network"]["nec"]["ofc_port"] %>
+host = <%= node["openstack"]["network"]["nec"]["ofc_host"] %>
+port = <%= node["openstack"]["network"]["nec"]["ofc_port"] %>
 
 # Drivers are in quantum/plugins/nec/drivers/ .
-driver = <%= node["openstack-network"]["nec"]["ofc_driver"] %>
+driver = <%= node["openstack"]["network"]["nec"]["ofc_driver"] %>
 
 # PacketFilter is available when it's enabled in this configuration
 # and supported by the driver.
-enable_packet_filter = <%= node["openstack-network"]["nec"]["ofc_enable_packet_filter"] %>
+enable_packet_filter = <%= node["openstack"]["network"]["nec"]["ofc_enable_packet_filter"] %>

@@ -1,10 +1,10 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DEFAULT]
 # Default log level is INFO
 # verbose and debug has the same result.
 # One of them will set DEBUG log level output
-debug = <%= node["openstack-network"]["debug"] %>
-verbose = <%= node['openstack-network']['verbose'] %>
+debug = <%= node["openstack"]["network"]["debug"] %>
+verbose = <%= node["openstack"]["network"]["verbose"] %>
 
 # Where to store Quantum state files.  This directory must be writable by the
 # user executing the agent.

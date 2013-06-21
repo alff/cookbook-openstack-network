@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DATABASE]
 # This line MUST be changed to actually run the plugin.
 # Example:
@@ -27,12 +27,12 @@ reconnect_interval = 2
 [META]
 ## This is list of flavor:quantum_plugins
 # extension method is used in the order of this list
-plugin_list = <%= node["openstack-network"]["metaplugin"]["plugin_list"] %>
-l3_plugin_list = <%= node["openstack-network"]["metaplugin"]["l3_plugin_list"] %>
+plugin_list = <%= node["openstack"]["network"]["metaplugin"]["plugin_list"] %>
+l3_plugin_list = <%= node["openstack"]["network"]["metaplugin"]["l3_plugin_list"] %>
 
 # Default value of flavor
-default_flavor = <%= node["openstack-network"]["metaplugin"]["default_flavor"] %>
-default_l3_flavor = <%= node["openstack-network"]["metaplugin"]["default_l3_flavor"] %>
+default_flavor = <%= node["openstack"]["network"]["metaplugin"]["default_flavor"] %>
+default_l3_flavor = <%= node["openstack"]["network"]["metaplugin"]["default_l3_flavor"] %>
 
 # supported extentions
 supported_extension_aliases = providernet

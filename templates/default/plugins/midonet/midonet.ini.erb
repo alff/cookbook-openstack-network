@@ -1,4 +1,4 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [DATABASE]
 # This line MUST be changed to actually run the plugin.
 # Example:
@@ -25,19 +25,19 @@ reconnect_interval = 2
 [MIDONET]
 # MidoNet API server URI
 # midonet_uri = http://localhost:8080/midonet-api
-midonet_uri = <%= node["openstack-network"]["midonet"]["midonet_uri"] %>
+midonet_uri = <%= node["openstack"]["network"]["midonet"]["midonet_uri"] %>
 
 # MidoNet admin username
-username = <%= node["openstack-network"]["midonet"]["username"] %>
+username = <%= node["openstack"]["network"]["midonet"]["username"] %>
 
 # MidoNet admin password
-password = <%= node["openstack-network"]["midonet"]["password"] %>
+password = <%= node["openstack"]["network"]["midonet"]["password"] %>
 
 # ID of the project that MidoNet admin user belongs to
-project_id = <%= node["openstack-network"]["midonet"]["project_id"] %>
+project_id = <%= node["openstack"]["network"]["midonet"]["project_id"] %>
 
 # Virtual provider router ID
-provider_router_id = <%= node["openstack-network"]["midonet"]["provider_router_id"] %>
+provider_router_id = <%= node["openstack"]["network"]["midonet"]["provider_router_id"] %>
 
 # Virtual metadata router ID
-metadata_router_id = <%= node["openstack-network"]["midonet"]["metadata_router_id"] %>
+metadata_router_id = <%= node["openstack"]["network"]["midonet"]["metadata_router_id"] %>

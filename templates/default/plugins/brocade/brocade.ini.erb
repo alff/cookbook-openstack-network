@@ -1,13 +1,13 @@
-<%= node["openstack-network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 [SWITCH]
 # username = <mgmt admin username>
-username = <%= node["openstack-network"]["brocade"]["switch_username"] %>
+username = <%= node["openstack"]["network"]["brocade"]["switch_username"] %>
 # password = <mgmt admin password>
-password = <%= node["openstack-network"]["brocade"]["switch_password"] %>
+password = <%= node["openstack"]["network"]["brocade"]["switch_password"] %>
 # address  = <switch mgmt ip address>
-address = <%= node["openstack-network"]["brocade"]["switch_address"] %>
+address = <%= node["openstack"]["network"]["brocade"]["switch_address"] %>
 # ostype   = NOS
-ostype = <%= node["openstack-network"]["brocade"]["switch_ostype"] %>
+ostype = <%= node["openstack"]["network"]["brocade"]["switch_ostype"] %>
 
 # Example:
 # username = admin
@@ -36,14 +36,14 @@ sql_connection = <%= @sql_connection %>
 #
 # Example:
 # physical_interface = physnet1
-physical_interface = <%= node["openstack-network"]["brocade"]["physical_interface"] %>
+physical_interface = <%= node["openstack"]["network"]["brocade"]["physical_interface"] %>
 
 [VLANS]
 # network_vlan_ranges = <physical network name>:nnnn:mmmm
 #
 # Example:
 # network_vlan_ranges = physnet1:1000:2999
-network_vlan_ranges = <%= node["openstack-network"]["brocade"]["network_vlan_ranges"] %>
+network_vlan_ranges = <%= node["openstack"]["network"]["brocade"]["network_vlan_ranges"] %>
 
 [AGENT]
 # Example:
@@ -54,4 +54,4 @@ network_vlan_ranges = <%= node["openstack-network"]["brocade"]["network_vlan_ran
 #
 # Example:
 # physical_interface_mappings = physnet1:em1
-physical_interface_mappings = <%= node["openstack-network"]["brocade"]["physical_interface_mappings"] %>
+physical_interface_mappings = <%= node["openstack"]["network"]["brocade"]["physical_interface_mappings"] %>

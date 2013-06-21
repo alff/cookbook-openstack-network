@@ -19,8 +19,8 @@
 
 template "/etc/quantum/plugins/linuxbridge/linuxbridge_conf.ini" do
   source "plugins/linuxbridge/linuxbridge_conf.ini.erb"
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
   mode 00644
   variables(
     :sql_connection => sql_connection

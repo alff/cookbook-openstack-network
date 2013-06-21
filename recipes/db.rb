@@ -27,6 +27,6 @@ end
 db_pass = db_password "quantum"
 
 db_create_with_user("network",
-  node["openstack-network"]["db"]["username"],
+  node["openstack"]["network"]["db"]["username"],
   db_pass
 )
