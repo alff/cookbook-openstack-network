@@ -16,6 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# discover database attributes
+db_user = node["openstack-network"]["db"]["username"]
+db_pass = db_password "quantum"
+sql_connection = db_uri("network", db_user, db_pass)
+
+platform_options = node["openstack-network"]["platform"]
+
+platform_options["quantum_openvswitch_packages"].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
+service "quantum-openvswitch-switch" do
+  service_name platform_options["quantum_openvswitch_service"]
+  supports :status => true, :restart => true
+  action :enable
+end
+
 execute "quantum-node-setup --plugin openvswitch" do
   only_if { platform?(%w(fedora redhat centos)) } # :pragma-foodcritic: ~FC024 - won't fix this
 end

@@ -36,8 +36,11 @@ default["openstack-network"]["region"] = "RegionOne"
 # The name of the Chef role that knows about the message queue server
 # that Quantum uses
 default["openstack-network"]["rabbit_server_chef_role"] = "rabbitmq-server"
+default["openstack-network"]["rabbit"]["username"] = "rabbit"
+default["openstack-network"]["rabbit"]["vhost"] = "/nova"
 
-default["openstack-network"]["db"]["username"] = "openstack-network"
+
+default["openstack-network"]["db"]["username"] = "quantum"
 
 # Used in the Keystone authtoken middleware configuration
 default["openstack-network"]["service_tenant_name"] = "service"
@@ -54,6 +57,14 @@ default["openstack-network"]["syslog"]["use"] = false
 default["openstack-network"]["syslog"]["facility"] = "LOG_LOCAL2"
 default["openstack-network"]["syslog"]["config_facility"] = "local2"
 
+# the plugins to install on the server.  this will be
+# quantum-plugin-%plugin% and the first plugin in the
+# list should match the core plugin below
+default["openstack-network"]["plugins"] = ['openvswitch', 'openvswitch-agent' ]
+
+# the core plugin to use for quantum
+default["openstack-network"]["core_plugin"] = "quantum.plugins.openvswitch.ovs_quantum_plugin.OVSQuantumPluginV2"
+
 # The bridging interface driver.
 #
 # Options are:
@@ -61,6 +72,7 @@ default["openstack-network"]["syslog"]["config_facility"] = "local2"
 #   - quantum.agent.linux.interface.OVSInterfaceDriver
 #   - quantum.agent.linux.interface.BridgeInterfaceDriver
 #
+
 default["openstack-network"]["interface_driver"] = 'quantum.agent.linux.interface.OVSInterfaceDriver'
 
 # The agent can use other DHCP drivers.  Dnsmasq is the simplest and requires
@@ -580,11 +592,11 @@ when "fedora", "redhat", "centos" # :pragma-foodcritic: ~FC024 - won't fix this
     "nova_network_packages" => [ "openstack-nova-network" ],
     "quantum_packages" => [ "openstack-quantum" ],
     "quantum_dhcp_packages" => [ "openstack-quantum" ],
-    "quantum_l3_packages" => [ "openstack-quantum" ],
-    "quantum_plugin_package" => [ "openstack-quantum-%plugin%" ],
+    "quantum_l3_packages" => [ "quantum-l3-agent" ],
+    "quantum_plugin_package" => "openstack-quantum-%plugin%",
     "quantum_server_service" => "quantum-server",
     "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
-    "quantum_dhcp_agent_service" => "quantum-l3-agent",
+    "quantum_l3_agent_service" => "quantum-l3-agent",
     "package_overrides" => ""
   }
 when "ubuntu"
@@ -594,7 +606,9 @@ when "ubuntu"
     "quantum_packages" => [ "quantum-server", "python-quantumclient", "python-pyparsing", "python-cliff" ],
     "quantum_dhcp_packages" => [ "quantum-dhcp-agent" ],
     "quantum_l3_packages" => [ "quantum-l3-agent" ],
-    "quantum_plugin_package" => [ "quantum-plugin-%plugin%" ],
+    "quantum_plugin_package" => "quantum-plugin-%plugin%",
+    "quantum_openvswitch_packages" => [ "openvswitch-switch", "openvswitch-datapath-dkms", "bridge-utils" ],
+    "quantum_openvswitch_service" => "openvswitch-switch",
     "quantum_server_service" => "quantum-server",
     "quantum_dhcp_agent_service" => "quantum-dhcp-agent",
     "quantum_l3_agent_service" => "quantum-l3-agent",

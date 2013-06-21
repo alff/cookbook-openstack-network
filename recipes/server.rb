@@ -23,7 +23,8 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-main_plugin = node["openstack-network"]["interface_driver"].split('.').last.downcase
+main_plugin = node["openstack-network"]["plugins"].first.downcase
+core_plugin = node["openstack-network"]["core_plugin"]
 
 if node["openstack-network"]["syslog"]["use"]
   include_recipe "openstack-common::logging"
@@ -49,6 +50,18 @@ platform_options["quantum_packages"].each do |pkg|
   end
 end
 
+platform_options["quantum_l3_packages"].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
+platform_options["quantum_dhcp_packages"].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
 service "quantum-server" do
   service_name platform_options["quantum_server_service"]
   supports :status => true, :restart => true
@@ -61,7 +74,13 @@ service "quantum-l3-agent" do
   supports :status => true, :restart => true
 
   # The providers below do not use the generic L3 agent...
-  not_if { ["nicira", "plumgrid", "bigswitch"].include?(main_plugin)
+  not_if { ["nicira", "plumgrid", "bigswitch"].include?(main_plugin) }
+  action :enable
+end
+
+service "quantum-dhcp-agent" do
+  service_name platform_options["quantum_dhcp_agent_service"]
+  supports :status => true, :restart => true
   action :enable
 end
 
@@ -105,8 +124,11 @@ end
 
 rabbit_server_role = node["openstack-network"]["rabbit_server_chef_role"]
 rabbit_info = config_by_role rabbit_server_role, "queue"
+rabbit_user = node["openstack-network"]["rabbit"]["username"]
+rabbit_vhost = node["openstack-network"]["rabbit"]["vhost"]
+rabbit_pass = user_password "rabbit"
 
-identity_endpoint = endpoint "identity"
+identity_endpoint = endpoint "identity-api"
 auth_uri = ::URI.decode identity_endpoint.to_s
 
 db_user = node["openstack-network"]["db"]["username"]
@@ -128,11 +150,19 @@ end
 # for the L2 and L3 drivers...
 
 # Install the plugin's Python package
-package platform_options["quantum_plugin_package"].gsub("%plugin%", main_plugin) do
-  action :install
+node["openstack-network"]["plugins"].each do |pkg|
+  plugin_fmt = platform_options["quantum_plugin_package"]
+  pkg = plugin_fmt.gsub("%plugin%", pkg)
+  package pkg do
+    action :install
+  end
 end
 
-include_recipe "openstack-network::#{main_plugin}"
+begin
+  include_recipe "openstack-network::#{main_plugin}"
+rescue Chef::Exceptions::RecipeNotFound
+   Chef::Log.warn "Could not find recipe openstack-network::#{main_plugin} for inclusion"
+end
 
 template "/etc/quantum/quantum.conf" do
   source "quantum.conf.erb"
@@ -142,12 +172,12 @@ template "/etc/quantum/quantum.conf" do
   variables(
     :bind_address => bind_address,
     :bind_port => api_endpoint.port,
-    :sql_connection => sql_connection,
     :rabbit_ipaddress => rabbit_info["host"],
     :rabbit_user => rabbit_user,
     :rabbit_password => rabbit_pass,
     :rabbit_port => rabbit_info["port"],
-    :rabbit_virtual_host => rabbit_vhost
+    :rabbit_virtual_host => rabbit_vhost,
+    :core_plugin => core_plugin
   )
 
   notifies :restart, "service[quantum-server]", :immediately
@@ -166,5 +196,9 @@ template "/etc/quantum/api-paste.ini" do
   notifies :restart, "service[quantum-server]", :immediately
 end
 
-# Sync db after config file is generated
-execute "quantum-db-manage stamp head && quantum-db-manage upgrade head"
+directory "/var/cache/quantum" do
+  owner "quantum"
+  group "quantum"
+  mode 00700
+end
+

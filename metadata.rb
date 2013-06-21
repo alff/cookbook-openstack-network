@@ -3,7 +3,7 @@ maintainer        "Jay Pipes <jaypipes@gmail.com>"
 license           "Apache 2.0"
 description       "Installs and configures the OpenStack Network API Service and various agents and plugins"
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           "2013.1.0"
+version           "2013.6.0"
 recipe            "openstack-network::server", "Installs packages required for a OpenStack Network server"
 recipe            "openstack-network::db", "Creates the OpenStack Network database"
 recipe            "openstack-network::keystone_registration", "Registers OpenStack Network endpoints and service user with Keystone"
@@ -13,6 +13,7 @@ recipe            "openstack-network::keystone_registration", "Registers OpenSta
 end
 
 depends           "database"
-depends           "keystone", ">= 2013.1.0"
+depends           "identity", ">= 7.0"
 depends           "mysql"
+depends           "sysctl"
 depends           "openstack-common", ">= 0.2.0"

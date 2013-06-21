@@ -17,14 +17,16 @@
 # limitations under the License.
 #
 
-template "/etc/quantum/plugins/hyperv/hyperv_quantum_plugin.ini" do
-  source "plugins/hyperv/hyperv_quantum__plugin.ini.erb"
-  owner node["openstack-network"]["user"]
-  group node["openstack-network"]["group"]
-  mode 00644
-  variables(
-    :sql_connection => sql_connection
-  )
-
-  notifies :restart, "service[quantum-server]", :immediately
-end
+#(alanmeadows) TODO
+#FC033: Missing template: .cookbooks/openstack-network/recipes/hyperv.rb:20
+#template "/etc/quantum/plugins/hyperv/hyperv_quantum_plugin.ini" do
+#  source "plugins/hyperv/hyperv_quantum__plugin.ini.erb"
+#  owner node["openstack-network"]["user"]
+#  group node["openstack-network"]["group"]
+#  mode 00644
+#  variables(
+#    :sql_connection => sql_connection
+#  )
+#
+#  notifies :restart, "service[quantum-server]", :immediately
+#end
