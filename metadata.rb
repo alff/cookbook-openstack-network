@@ -13,7 +13,7 @@ recipe            "openstack-network::keystone_registration", "Registers OpenSta
 end
 
 depends           "database"
-depends           "identity", ">= 7.0"
+depends           "openstack-identity", ">= 7.0"
 depends           "mysql"
 depends           "sysctl"
 depends           "openstack-common", ">= 0.2.0"

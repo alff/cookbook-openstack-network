@@ -8,4 +8,5 @@ gem "chefspec", "~> 1.2.0"
 gem "foodcritic"
 gem "strainer"
 gem "webmock", "~> 1.11.0"
+gem "tailor"
 

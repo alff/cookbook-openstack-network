@@ -4,7 +4,7 @@
 # Show debugging output in log (sets DEBUG log level output)
 debug = <%= node["openstack"]["network"]["debug"] %>
 
-# The LBaaS agent will resync its state with Quantum to recover from any
+# The LBaaS agent will resync its state with Neutron to recover from any
 # transient notification or rpc errors. The interval is number of
 # seconds between attempts.
 periodic_interval = <%= node["openstack"]["network"]["lbaas"]["periodic_interval"] %>

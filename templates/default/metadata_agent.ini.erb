@@ -1,24 +1,23 @@
-B
-bsbrbÂode["openstack"]["network"]["custom_template_banner"] %>
+<%= node["openstack"]["network"]["custom_template_banner"] %>
 
 [DEFAULT]
 # Show debugging output in log (sets DEBUG log level output)
 debug = <%= node["openstack"]["network"]["debug"] %>
 
-# The Quantum user information for accessing the Quantum API.
-auth_url = http://localhost:35357/v2.0
-auth_region = RegionOne
-admin_tenant_name = %SERVICE_TENANT_NAME%
-admin_user = %SERVICE_USER%
-admin_password = %SERVICE_PASSWORD%
+# The Neutron user information for accessing the Neutron API.
+auth_url = <%= @admin_identity_endpoint %>
+auth_region = <%= node["openstack"]["network"]["region"] %>
+admin_tenant_name = <%= node["openstack"]["network"]["service_tenant_name"] %>
+admin_user = <%= node["openstack"]["network"]["service_user"] %>
+admin_password = <%= @service_pass %>
 
 # IP address used by Nova metadata server
 nova_metadata_ip = <%= node["openstack"]["network"]["metadata"]["nova_metadata_ip"] %>
 
 # TCP Port used by Nova metadata server
-# nova_metadata_port = 8775
+nova_metadata_port = i<%= node["openstack"]["network"]["metadata"]["nova_metadata_port"] %>
 
-# When proxying metadata requests, Quantum signs the Instance-ID header with a
+# When proxying metadata requests, Neutron signs the Instance-ID header with a
 # shared secret to prevent spoofing.  You may select any string for a secret,
 # but it must match here and in the configuration used by the Nova Metadata
 # Server. NOTE: Nova uses a different key: quantum_metadata_proxy_shared_secret

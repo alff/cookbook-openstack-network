@@ -51,3 +51,9 @@ template "/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini" do
 
   notifies :restart, "service[quantum-server]", :immediately
 end
+
+# enabling plugin
+link "/etc/quantum/plugin.ini" do
+  to "/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini"
+  notifies :restart, "service[quantum-server]", :immediately
+end
