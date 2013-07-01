@@ -32,9 +32,14 @@ default["openstack"]["network"]["group"] = "quantum"
 
 # Gets set in the Network Endpoint when registering with Keystone
 default["openstack"]["network"]["region"] = "RegionOne"
+default["openstack"]["network"]["service_user"] = "quantum"
+default["openstack"]["network"]["service_role"] = "admin"
+default["openstack"]["network"]["service_name"] = "quantum"
+default["openstack"]["network"]["service_type"] = "network"
+default["openstack"]["network"]["description"] = "OpenStack Networking service"
 
 # The name of the Chef role that knows about the message queue server
-# that Quantum uses
+# that Neutron uses
 default["openstack"]["network"]["rabbit_server_chef_role"] = "rabbitmq-server"
 default["openstack"]["network"]["rabbit"]["username"] = "rabbit"
 default["openstack"]["network"]["rabbit"]["vhost"] = "/nova"
@@ -44,11 +49,11 @@ default["openstack"]["network"]["db"]["username"] = "quantum"
 
 # Used in the Keystone authtoken middleware configuration
 default["openstack"]["network"]["service_tenant_name"] = "service"
-default["openstack"]["network"]["service_user"] = "quantum"
+
 # Keystone PKI signing directory.
 default["openstack"]["network"]["api"]["auth"]["cache_dir"] = "/var/cache/quantum/api"
 
-# If set, Quantum API service will bind to the address on this interface,
+# If set, Neutron API service will bind to the address on this interface,
 # otherwise it will bind to the API endpoint's host.
 default["openstack"]["network"]["api"]["bind_interface"] = nil
 
@@ -85,7 +90,7 @@ default["openstack"]["network"]["use_namespaces"] = "True"
 
 # ============================= DHCP Agent Configuration ===================
 
-# Number of seconds between sync of DHCP agent with Quantum API server
+# Number of seconds between sync of DHCP agent with Neutron API server
 default["openstack"]["network"]["dhcp"]["resync_interval"] = 5
 
 # OVS based plugins(Ryu, NEC, NVP, BigSwitch/Floodlight) that use OVS
@@ -101,7 +106,7 @@ default["openstack"]["network"]["dhcp"]["enable_isolated_metadata"] = "False"
 
 # Allows for serving metadata requests coming from a dedicated metadata
 # access network whose cidr is 169.254.169.254/16 (or larger prefix), and
-# is connected to a Quantum router from which the VMs send metadata
+# is connected to a Neutron router from which the VMs send metadata
 # request. In this case DHCP Option 121 will not be injected in VMs, as
 # they will be able to reach 169.254.169.254 through a router.
 # This option requires enable_isolated_metadata = True
@@ -121,7 +126,7 @@ default["openstack"]["network"]["l3"]["gateway_external_network_id"] = ""
 
 # Indicates that this L3 agent should also handle routers that do not have
 # an external network gateway configured.  This option should be True only
-# for a single agent in a Quantum deployment, and may be False for all agents
+# for a single agent in a Neutron deployment, and may be False for all agents
 # if all routers must have an external network gateway
 default["openstack"]["network"]["l3"]["handle_internal_only_routers"] = "True"
 
@@ -132,7 +137,7 @@ default["openstack"]["network"]["l3"]["external_network_bridge"] = "br-ex"
 # Interface to use for external bridge.
 default["openstack"]["network"]["l3"]["external_network_bridge_interface"] = "eth1"
 
-# TCP Port used by Quantum metadata server
+# TCP Port used by Neutron metadata server
 default["openstack"]["network"]["l3"]["metadata_port"] = 9697
 
 # Send this many gratuitous ARPs for HA setup. Set it below or equal to 0
@@ -150,11 +155,18 @@ default["openstack"]["network"]["l3"]["periodic_fuzzy_delay"] = 5
 
 # The location of the Nova Metadata API service to proxy to.
 default["openstack"]["network"]["metadata"]["nova_metadata_ip"] = "127.0.0.1"
+default["openstack"]["network"]["metadata"]["nova_metadata_port"] = 8775
 
 # ============================= LBaaS Agent Configuration ==================
 
-# Number of seconds between sync of LBaaS agent with Quantum API server
+# Enable or disable quantum loadbalancer
+default["openstack-network"]["quantum_loadbalancer"] = true
+
+# Number of seconds between sync of LBaaS agent with Neutron API server
 default["openstack"]["network"]["lbaas"]["periodic_interval"] = 10
+
+# Set lbaas plugin
+default["openstack-network"]["quantum_plugin"] = "ovs"
 
 # ============================= OVS Plugin Configuration ===================
 
@@ -220,6 +232,9 @@ default["openstack"]["network"]["openvswitch"]["local_ip"] = ""
 #
 # Example: bridge_mappings = physnet1:br-eth1
 default["openstack"]["network"]["openvswitch"]["bridge_mappings"] = ""
+
+# Firewall driver for realizing quantum security group function
+default["openstack"]["network"]["openvswitch"]["fw_driver"] = "quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver"
 
 # ============================= LinuxBridge Plugin Configuration ===========
 
@@ -483,7 +498,7 @@ default["openstack"]["network"]["nicira"]["redirects"] = 2
 default["openstack"]["network"]["nicira"]["nvp_controllers"] = "xx.yy.zz.ww:443, aa.bb.cc.dd, ee.ff.gg.hh.ee:80"
 
 # UUID of the pre-existing default NVP Transport zone to be used for creating
-# tunneled isolated "Quantum" networks. This option MUST be specified, e.g.:
+# tunneled isolated "Neutron" networks. This option MUST be specified, e.g.:
 default["openstack"]["network"]["nicira"]["default_tz_uuid"] = "1e8e52cf-fa7f-46b0-a14a-f99835a9cb53"
 
 # (Optional) UUID of the cluster in NVP.  It can be retrieved from NVP management
@@ -517,7 +532,7 @@ default["openstack"]["network"]["nicira"]["concurrent_connections"] = 3
 
 # Acceptable values for 'metadata_mode' are:
 #   - 'access_network': this enables a dedicated connection to the metadata
-#     proxy for metadata server access via Quantum router.
+#     proxy for metadata server access via Neutron router.
 #   - 'dhcp_host_route': this enables host route injection via the dhcp agent.
 # This option is only useful if running on a host that does not support
 # namespaces otherwise access_network should be used.
@@ -604,6 +619,7 @@ when "ubuntu"
     "mysql_python_packages" => [ "python-mysqldb" ],
     "nova_network_packages" => [ "nova-network" ],
     "quantum_packages" => [ "quantum-server", "python-quantumclient", "python-pyparsing", "python-cliff" ],
+    "quantum_lb_packages" => ["quantum-lbaas-agent", "haproxy"],
     "quantum_dhcp_packages" => [ "quantum-dhcp-agent" ],
     "quantum_l3_packages" => [ "quantum-l3-agent" ],
     "quantum_plugin_package" => "quantum-plugin-%plugin%",

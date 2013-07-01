@@ -30,7 +30,7 @@ Cookbooks
 The following cookbooks are dependencies:
 
 * database
-* identity
+* openstack-identity
 * mysql
 * openstack-common `>= 2.0.0`
 
@@ -62,6 +62,17 @@ db
 
 - Creates the OpenStack Network database
 
+openvswitch
+-----------
+
+- Installs the OVS L2 plugin
+
+balancer
+--------
+
+- Install and setup loadbalancer service
+
+
 Attributes
 ==========
 
@@ -73,6 +84,10 @@ Templates
 * `api-paste.ini.erb` - Paste config for OpenStack Network server
 * `quantum.conf.erb` - Config file for OpenStack Network server
 * `policy.json.erb` - Configuration of ACLs for glance API server
+* `metadata_agent.ini.erb` - Configuration for metadata agent
+* `lbaas_agent.ini.erb` - Configuration for lbaas agent
+* `l3_agent.ini.erb` - Configuration for l3 agent
+* `dhcp_agent.ini.erb` - Configuration for DHCP agent
 
 License and Author
 ==================
@@ -85,10 +100,12 @@ License and Author
 | **Authors**          |  Alan Meadows (<alan.meadows@gmail.com>)           |
 |                      |  Jay Pipes (<jaypipes@gmail.com>)                  |
 |                      |  Ionuț Arțăriși (<iartarisi@suse.cz>)              |
+|                      |  Alex Khalkuziev (<master.alff@gmail.com>)         |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
 |                      |  Copyright (c) 2013, SUSE Linux GmbH               |
 |                      |  Copyright (c) 2012, Rackspace US, Inc.            |
+|                      |  Copyright (c) 2013, Mirantis IT                   |
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

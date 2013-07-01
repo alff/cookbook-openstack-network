@@ -1,4 +1,5 @@
 Berksfile.lock
+Gemfile.lock
 validation.pem
 metadata.json
 *~

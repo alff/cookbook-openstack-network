@@ -131,14 +131,15 @@ rabbit_vhost = node["openstack"]["network"]["rabbit"]["vhost"]
 rabbit_pass = user_password "rabbit"
 
 identity_endpoint = endpoint "identity-api"
+admin_identity_endpoint = endpoint "identity-admin"
 auth_uri = ::URI.decode identity_endpoint.to_s
 
 db_user = node["openstack"]["network"]["db"]["username"]
-db_pass = db_password "quantum"
+db_pass = db_password "neutron"
 sql_connection = db_uri("network", db_user, db_pass)
 
 api_endpoint = endpoint "network-api"
-service_pass = service_password "quantum"
+service_pass = service_password "neutron"
 service_tenant_name = node["openstack"]["network"]["service_tenant_name"]
 service_user = node["openstack"]["network"]["service_user"]
 
@@ -202,5 +203,17 @@ directory "/var/cache/quantum" do
   owner "quantum"
   group "quantum"
   mode 00700
+end
+
+template "/etc/quantum/metadata_agent.ini" do
+  source "metadata_agent.ini.erb"
+  owner node["openstack"]["network"]["user"]
+  group node["openstack"]["network"]["group"]
+  mode   00644
+  variables(
+        "admin_identity_endpoint" => admin_identity_endpoint,
+        "service_pass" => service_pass
+  )
+  notifies :restart, "service[quantum-metadata-agent]", :immediately
 end
 
