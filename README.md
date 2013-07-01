@@ -18,12 +18,6 @@ Requirements
 
 Chef 11.4.4 or higher required (for Chef environment use)
 
-Platform
---------
-
-* Ubuntu-12.04+
-* Fedora-17+
-
 Cookbooks
 ---------
 
@@ -31,7 +25,7 @@ The following cookbooks are dependencies:
 
 * database
 * openstack-identity
-* mysql
+* mysql or postgresql
 * openstack-common `>= 2.0.0`
 
 Recipes
@@ -99,7 +93,7 @@ License and Author
 |:---------------------|:---------------------------------------------------|
 | **Authors**          |  Alan Meadows (<alan.meadows@gmail.com>)           |
 |                      |  Jay Pipes (<jaypipes@gmail.com>)                  |
-|                      |  Ionuț Arțăriși (<iartarisi@suse.cz>)              |
+|                      |  Ionut Artarisi (<iartarisi@suse.cz>)              |
 |                      |  Alex Khalkuziev (<master.alff@gmail.com>)         |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
@@ -116,6 +110,5 @@ You may obtain a copy of the License at
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and⋅
+See the License for the specific language governing permissions and
 limitations under the License.
-
